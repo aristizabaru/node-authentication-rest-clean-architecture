@@ -1,6 +1,5 @@
-import { envs } from "./config/env.adapter"
-import { AppRoutes } from "./presentation/routes"
-import { Server } from "./presentation/server"
+import { envs } from "./config"
+import { AppRoutes, Server } from "./presentation"
 
 (async () => {
     await main()
