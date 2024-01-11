@@ -1,5 +1,4 @@
 import express, { Router } from 'express'
-import compresion from 'compression'
 import compression from 'compression'
 
 interface Options {
