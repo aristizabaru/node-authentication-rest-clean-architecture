@@ -1,8 +1,8 @@
 import { RegisterUserDto } from "../dtos";
-import { UserEnttity } from "../entities";
+import { UserEntity } from "../entities";
 
 export interface AuthRepository {
 
-    register(registerUserDto: RegisterUserDto): Promise<UserEnttity>
+    register(registerUserDto: RegisterUserDto): Promise<UserEntity>
 
 }
