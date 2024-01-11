@@ -1,3 +1,4 @@
+import { HashAdapter } from "../../config";
 import { UserModel } from "../../data/mongodb";
 import { AuthDatasource, CustomError, RegisterUserDto, UserEntity } from "../../domain";
 
@@ -17,7 +18,7 @@ export class MongoAuthDatasource implements AuthDatasource {
             const user = await UserModel.create({
                 email: email,
                 name: name,
-                password: password,
+                password: HashAdapter.hash(password),
             })
 
             await user.save()
@@ -28,7 +29,7 @@ export class MongoAuthDatasource implements AuthDatasource {
                 user.id,
                 name,
                 email,
-                password,
+                user.password,
                 user.roles
             )
         } catch (error) {
