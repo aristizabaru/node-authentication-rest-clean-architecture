@@ -1,6 +1,7 @@
 import { Router } from "express"
 import { AuthController } from "./controller"
 import { AuthRepositoryImpl, MongoAuthDatasource } from "../../infrastructure"
+import { AuthMiddleware } from "../middleware/auth.middleware"
 
 
 export class AuthRoutes {
@@ -13,7 +14,7 @@ export class AuthRoutes {
 
         router.post('/login', controller.loginUser)
         router.post('/register', controller.registerUser)
-        router.get('/', controller.getUsers)
+        router.get('/', [AuthMiddleware.validateJwt], controller.getUsers)
 
         return router
 
