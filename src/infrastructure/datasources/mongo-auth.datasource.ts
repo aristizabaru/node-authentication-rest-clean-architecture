@@ -1,9 +1,11 @@
 import { HashAdapter } from "../../config";
 import { UserModel } from "../../data/mongodb";
 import { AuthDatasource, CustomError, RegisterUserDto, UserEntity } from "../../domain";
+import { UserMapper } from "../mappers";
 
 type HashFunction = (password: string) => string
 type CompareFunction = (password: string, hashed: string) => boolean
+type UserMapperFromObjectFunction = (object: { [key: string]: any; }) => UserEntity
 
 export class MongoAuthDatasource implements AuthDatasource {
 
@@ -11,6 +13,7 @@ export class MongoAuthDatasource implements AuthDatasource {
     constructor(
         private readonly hashPassword: HashFunction = HashAdapter.hash,
         private readonly comparePassword: CompareFunction = HashAdapter.compare,
+        private readonly userMapperFromObject: UserMapperFromObjectFunction = UserMapper.userEntityFromObject
     ) { }
 
     async register(registerUserDto: RegisterUserDto): Promise<UserEntity> {
@@ -31,14 +34,8 @@ export class MongoAuthDatasource implements AuthDatasource {
             await user.save()
 
             // 3 Mapear la respuesta a la entidad
-            // TODO: falta mapper
-            return new UserEntity(
-                user.id,
-                name,
-                email,
-                user.password,
-                user.roles
-            )
+            return this.userMapperFromObject(user)
+
         } catch (error) {
             if (error instanceof CustomError) {
                 throw error
