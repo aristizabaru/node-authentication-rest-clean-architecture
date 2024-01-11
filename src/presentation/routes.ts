@@ -1,12 +1,12 @@
-import { Request, Response, Router } from "express";
+import { Router } from "express";
+import { AuthRoutes } from "./auth";
+
 
 export class AppRoutes {
     static get routes(): Router {
         const router = Router()
 
-        router.get('/app/test', (req: Request, res: Response) => {
-            res.json('route working')
-        })
+        router.use('/api/auth', AuthRoutes.routes)
 
         return router
     }
