@@ -2,9 +2,16 @@ import { HashAdapter } from "../../config";
 import { UserModel } from "../../data/mongodb";
 import { AuthDatasource, CustomError, RegisterUserDto, UserEntity } from "../../domain";
 
-
+type HashFunction = (password: string) => string
+type CompareFunction = (password: string, hashed: string) => boolean
 
 export class MongoAuthDatasource implements AuthDatasource {
+
+    // DI
+    constructor(
+        private readonly hashPassword: HashFunction = HashAdapter.hash,
+        private readonly comparePassword: CompareFunction = HashAdapter.compare,
+    ) { }
 
     async register(registerUserDto: RegisterUserDto): Promise<UserEntity> {
         const { name, email, password } = registerUserDto
@@ -18,7 +25,7 @@ export class MongoAuthDatasource implements AuthDatasource {
             const user = await UserModel.create({
                 email: email,
                 name: name,
-                password: HashAdapter.hash(password),
+                password: this.hashPassword(password),
             })
 
             await user.save()
