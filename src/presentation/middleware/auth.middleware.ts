@@ -1,10 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 import { JwtAdapter } from "../../config";
-import { UserModel } from "../../data/mongodb";
+import { UserModel } from "../../data";
+
+type ValidateToken = <T> (token: string) => Promise<T | null>
 
 export class AuthMiddleware {
 
-    static validateJwt = async (req: Request, res: Response, next: NextFunction) => {
+    constructor(
+        private readonly validateToken: ValidateToken = JwtAdapter.validateToken
+    ) { }
+
+    validateJwt = async (req: Request, res: Response, next: NextFunction) => {
 
         const authorization = req.header('Authorization')
 
@@ -15,10 +21,11 @@ export class AuthMiddleware {
 
         try {
 
-            const payload = await JwtAdapter.validateToken<{ id: string }>(token)
+            const payload = await this.validateToken<{ id: string }>(token)
             if (!payload) return res.status(401).json({ error: 'Invalid token' })
 
             // Validate user
+            // TODO: convertir a caso de uso de usuario. Código acoplado
             const user = await UserModel.findById(payload.id)
             // Se debe loguear incidencia porque token firmado no debe fallar en la busqueda
             if (!user) return res.status(500).json({ error: 'Internal server error' })
