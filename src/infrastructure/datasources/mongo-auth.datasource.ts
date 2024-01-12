@@ -6,7 +6,6 @@ import { UserMapper } from "../mappers";
 type HashFunction = (password: string) => string
 type CompareFunction = (password: string, hashed: string) => boolean
 type UserMapperFromObjectFunction = (object: { [key: string]: any; }) => UserEntity
-type GenerateToken = (payload: Object, duration?: string) => Promise<string | null>
 
 export class MongoAuthDatasource implements AuthDatasource {
 
@@ -29,11 +28,11 @@ export class MongoAuthDatasource implements AuthDatasource {
             const isMatching = this.comparePassword(password, user.password)
             if (!isMatching) throw CustomError.badRequest('Password is not valid')
 
-            // 3. Recuperar entidad omitiendo password para respuesta
+            // 3 Mapear la entidad a la respuesta
             return this.userMapperFromObject(user)
 
         } catch (error) {
-            throw error
+            throw error // El catch está en el controlador
         }
     }
 
@@ -54,11 +53,11 @@ export class MongoAuthDatasource implements AuthDatasource {
 
             await user.save()
 
-            // 3 Mapear la respuesta a la entidad
+            // 3 Mapear la entidad a la respuesta
             return this.userMapperFromObject(user)
 
         } catch (error) {
-            throw error
+            throw error // El catch está en el controlador
         }
     }
 
