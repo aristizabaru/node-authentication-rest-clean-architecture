@@ -17,4 +17,16 @@ export class JwtAdapter {
 
     }
 
+    static async validateToken<T>(token: string): Promise<T | null> {
+
+        return new Promise(resolve => {
+            jwt.verify(token, JWT_SEED, (error, decoded) => {
+                if (error) return resolve(null)
+
+                resolve(decoded as T)
+            })
+        })
+
+    }
+
 }
