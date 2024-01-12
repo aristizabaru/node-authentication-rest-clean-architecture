@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { AuthRepository, CustomError, RegisterUser, RegisterUserDto } from "../../domain";
-import { JwtAdapter } from "../../config";
-import { UserModel } from "../../data/mongodb";
+import { UserModel } from "../../data";
 
 export class AuthController {
 
@@ -35,6 +34,8 @@ export class AuthController {
     }
 
     getUsers = (req: Request, res: Response) => {
+
+        // TODO: Construir caso de uso
         UserModel.find()
             .then(users => res.json({
                 users,

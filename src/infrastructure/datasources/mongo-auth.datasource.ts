@@ -1,5 +1,5 @@
 import { HashAdapter } from "../../config";
-import { UserModel } from "../../data/mongodb";
+import { UserModel } from "../../data";
 import { AuthDatasource, CustomError, RegisterUserDto, UserEntity } from "../../domain";
 import { UserMapper } from "../mappers";
 
