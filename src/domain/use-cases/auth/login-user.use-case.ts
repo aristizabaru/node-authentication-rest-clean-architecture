@@ -3,7 +3,6 @@ import { LoginUserDto } from "../../dtos"
 import { CustomError } from "../../errors"
 import { AuthRepository } from "../../repositories"
 
-
 type GenerateToken = (payload: Object, duration?: string) => Promise<string | null>
 
 interface UserToken {
@@ -26,7 +25,7 @@ export class LoginUser implements LoginUserUseCase {
         private readonly generateToken: GenerateToken = JwtAdapter.generateToken
     ) { }
 
-    async execute(loginUserDto: LoginUserDto): Promise<any> {
+    async execute(loginUserDto: LoginUserDto): Promise<UserToken> {
 
         const user = await this.authRepository.login(loginUserDto)
         const token = await this.generateToken({ id: user.id })
