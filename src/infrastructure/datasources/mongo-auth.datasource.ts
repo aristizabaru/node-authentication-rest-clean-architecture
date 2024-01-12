@@ -1,11 +1,12 @@
 import { HashAdapter } from "../../config";
 import { UserModel } from "../../data";
-import { AuthDatasource, CustomError, RegisterUserDto, UserEntity } from "../../domain";
+import { AuthDatasource, CustomError, LoginUserDto, RegisterUserDto, UserEntity } from "../../domain";
 import { UserMapper } from "../mappers";
 
 type HashFunction = (password: string) => string
 type CompareFunction = (password: string, hashed: string) => boolean
 type UserMapperFromObjectFunction = (object: { [key: string]: any; }) => UserEntity
+type GenerateToken = (payload: Object, duration?: string) => Promise<string | null>
 
 export class MongoAuthDatasource implements AuthDatasource {
 
@@ -15,6 +16,26 @@ export class MongoAuthDatasource implements AuthDatasource {
         private readonly comparePassword: CompareFunction = HashAdapter.compare,
         private readonly userMapperFromObject: UserMapperFromObjectFunction = UserMapper.userEntityFromObject
     ) { }
+
+    async login(loginUserDto: LoginUserDto): Promise<UserEntity> {
+        const { email, password } = loginUserDto
+
+        try {
+            // 1. Verificar si el correo existe
+            const user = await UserModel.findOne({ email: email })
+            if (!user) throw CustomError.badRequest('User does not exists')
+
+            // 2. Validate password
+            const isMatching = this.comparePassword(password, user.password)
+            if (!isMatching) throw CustomError.badRequest('Password is not valid')
+
+            // 3. Recuperar entidad omitiendo password para respuesta
+            return this.userMapperFromObject(user)
+
+        } catch (error) {
+            throw error
+        }
+    }
 
     async register(registerUserDto: RegisterUserDto): Promise<UserEntity> {
         const { name, email, password } = registerUserDto
@@ -37,11 +58,7 @@ export class MongoAuthDatasource implements AuthDatasource {
             return this.userMapperFromObject(user)
 
         } catch (error) {
-            if (error instanceof CustomError) {
-                throw error
-            } else {
-                throw CustomError.internalServerError()
-            }
+            throw error
         }
     }
 

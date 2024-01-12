@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
-import { AuthRepository, CustomError, RegisterUser, RegisterUserDto } from "../../domain";
+import { AuthRepository, CustomError, LoginUserDto, RegisterUser, RegisterUserDto } from "../../domain";
 import { UserModel } from "../../data";
+import { LoginUser } from "../../domain/use-cases/auth/login-user.use-case";
 
 export class AuthController {
 
@@ -30,12 +31,18 @@ export class AuthController {
     }
 
     loginUser = (req: Request, res: Response) => {
-        res.json('login from controller')
+        const [error, loginUserDto] = LoginUserDto.create(req.body)
+        if (error) return res.status(400).json({ error })
+
+        new LoginUser(this.authRepository)
+            .execute(loginUserDto!)
+            .then(data => res.json(data))
+            .catch(error => this.handleError(error, res))
     }
 
     getUsers = (req: Request, res: Response) => {
 
-        // TODO: Construir caso de uso
+        // TODO: Construir caso de uso, código acoplado
         UserModel.find()
             .then(users => res.json({
                 users,
