@@ -5,7 +5,7 @@ import { UserMapper } from "../../mappers";
 
 type HashFunction = (password: string) => string
 type CompareFunction = (password: string, hashed: string) => boolean
-type UserMapperFromObjectFunction = (object: { [key: string]: any; }) => UserEntity
+type UserMapperFromObjectFunction = (object: { [key: string]: any }) => UserEntity
 
 export class MongoAuthDatasource implements AuthDatasource {
 

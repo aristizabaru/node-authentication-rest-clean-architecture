@@ -1,13 +1,12 @@
 import { Request, Response } from "express";
 import { AuthRepository, CustomError, LoginUser, LoginUserDto, RegisterUser, RegisterUserDto } from "../../domain";
 import { statusCodeErrorMessage } from "../../config";
-import { UserModel } from "../../data";
 
 export class AuthController {
 
     // DI
     constructor(
-        private readonly authRepository: AuthRepository
+        private readonly authRepository: AuthRepository,
     ) { }
 
     private handleError = (error: unknown, res: Response) => {
@@ -40,14 +39,4 @@ export class AuthController {
             .catch(error => this.handleError(error, res))
     }
 
-    getUsers = (req: Request, res: Response) => {
-
-        // TODO: Construir caso de uso, código acoplado
-        UserModel.find()
-            .then(users => res.json({
-                users,
-                user: req.body.user
-            }))
-            .catch(() => res.status(500).json({ error: statusCodeErrorMessage.INTERNAL_SERVER_ERROR }))
-    }
 }
