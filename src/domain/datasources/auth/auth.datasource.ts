@@ -1,5 +1,5 @@
-import { RegisterUserDto, LoginUserDto } from "../dtos";
-import { UserEntity } from "../entities";
+import { RegisterUserDto, LoginUserDto } from "../../dtos";
+import { UserEntity } from "../../entities";
 
 export interface AuthDatasource {
 

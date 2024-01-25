@@ -1,1 +1,1 @@
-export * from './mongo-auth.datasource'
+export * from './auth'

@@ -1,7 +1,7 @@
-import { HashAdapter, validationErrorMessage } from "../../config";
-import { UserModel } from "../../data";
-import { AuthDatasource, CustomError, LoginUserDto, RegisterUserDto, UserEntity } from "../../domain";
-import { UserMapper } from "../mappers";
+import { HashAdapter, validationErrorMessage } from "../../../config";
+import { UserModel } from "../../../data";
+import { AuthDatasource, CustomError, LoginUserDto, RegisterUserDto, UserEntity } from "../../../domain";
+import { UserMapper } from "../../mappers";
 
 type HashFunction = (password: string) => string
 type CompareFunction = (password: string, hashed: string) => boolean

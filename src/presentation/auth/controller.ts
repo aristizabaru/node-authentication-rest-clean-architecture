@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
-import { AuthRepository, CustomError, LoginUserDto, RegisterUser, RegisterUserDto } from "../../domain";
-import { UserModel } from "../../data";
-import { LoginUser } from "../../domain/use-cases/auth/login-user.use-case";
+import { AuthRepository, CustomError, LoginUser, LoginUserDto, RegisterUser, RegisterUserDto } from "../../domain";
 import { statusCodeErrorMessage } from "../../config";
+import { UserModel } from "../../data";
 
 export class AuthController {
 
