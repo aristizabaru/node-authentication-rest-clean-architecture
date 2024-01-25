@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { AuthRepository, CustomError, LoginUserDto, RegisterUser, RegisterUserDto } from "../../domain";
 import { UserModel } from "../../data";
 import { LoginUser } from "../../domain/use-cases/auth/login-user.use-case";
+import { statusCodeErrorMessage } from "../../config";
 
 export class AuthController {
 
@@ -15,7 +16,7 @@ export class AuthController {
             return res.status(error.statusCode).json({ error: error.message })
         }
         console.log(error) // Aquí se debería hacer un log --> winston logger
-        return res.status(500).json({ error: 'Internal Server Error' })
+        return res.status(500).json({ error: statusCodeErrorMessage.INTERNAL_SERVER_ERROR })
     }
 
     registerUser = (req: Request, res: Response) => {
@@ -48,6 +49,6 @@ export class AuthController {
                 users,
                 user: req.body.user
             }))
-            .catch(() => res.status(500).json({ error: 'Internal server error' }))
+            .catch(() => res.status(500).json({ error: statusCodeErrorMessage.INTERNAL_SERVER_ERROR }))
     }
 }

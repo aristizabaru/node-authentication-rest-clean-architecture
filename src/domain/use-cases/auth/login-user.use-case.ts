@@ -1,4 +1,4 @@
-import { JwtAdapter } from "../../../config"
+import { JwtAdapter, generalErrorMessage } from "../../../config"
 import { LoginUserDto } from "../../dtos"
 import { CustomError } from "../../errors"
 import { AuthRepository } from "../../repositories"
@@ -29,7 +29,7 @@ export class LoginUser implements LoginUserUseCase {
 
         const user = await this.authRepository.login(loginUserDto)
         const token = await this.generateToken({ id: user.id })
-        if (!token) throw CustomError.internalServerError('Error generating token')
+        if (!token) throw CustomError.internalServerError(generalErrorMessage.UNGENERATED_TOKEN)
 
         return {
             token: token,

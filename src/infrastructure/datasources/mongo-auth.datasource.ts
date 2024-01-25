@@ -1,4 +1,4 @@
-import { HashAdapter } from "../../config";
+import { HashAdapter, validationErrorMessage } from "../../config";
 import { UserModel } from "../../data";
 import { AuthDatasource, CustomError, LoginUserDto, RegisterUserDto, UserEntity } from "../../domain";
 import { UserMapper } from "../mappers";
@@ -22,11 +22,11 @@ export class MongoAuthDatasource implements AuthDatasource {
         try {
             // 1. Verificar si el correo existe
             const user = await UserModel.findOne({ email: email })
-            if (!user) throw CustomError.badRequest('User does not exists')
+            if (!user) throw CustomError.badRequest(validationErrorMessage.USER_NOT_FOUND)
 
             // 2. Validate password
             const isMatching = this.comparePassword(password, user.password)
-            if (!isMatching) throw CustomError.badRequest('Password is not valid')
+            if (!isMatching) throw CustomError.badRequest(validationErrorMessage.INVALID_PASSWORD)
 
             // 3 Mapear la entidad a la respuesta
             return this.userMapperFromObject(user)
@@ -42,7 +42,7 @@ export class MongoAuthDatasource implements AuthDatasource {
         try {
             // 1. Verificar si el correo existe
             const emailExists = await UserModel.findOne({ email: email })
-            if (emailExists) throw CustomError.badRequest('User already exists')
+            if (emailExists) throw CustomError.badRequest(validationErrorMessage.USER_EXISTS)
 
             // 2. Hash contraseña
             const user = await UserModel.create({

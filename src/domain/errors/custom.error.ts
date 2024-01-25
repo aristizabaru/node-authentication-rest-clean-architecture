@@ -1,3 +1,5 @@
+import { statusCodeErrorMessage } from "../../config"
+
 export class CustomError extends Error {
 
     constructor(
@@ -7,23 +9,23 @@ export class CustomError extends Error {
         super(message)
     }
 
-    static badRequest(message: string = 'Bad request'): CustomError {
+    static badRequest(message: string = statusCodeErrorMessage.BAD_REQUEST): CustomError {
         return new CustomError(400, message)
     }
 
-    static unauthorized(message: string = 'Unauthorized'): CustomError {
+    static unauthorized(message: string = statusCodeErrorMessage.UNAUTHORIZED): CustomError {
         return new CustomError(401, message)
     }
 
-    static forbidden(message: string = 'Forbidden'): CustomError {
+    static forbidden(message: string = statusCodeErrorMessage.FORBIDDEN): CustomError {
         return new CustomError(403, message)
     }
 
-    static notFound(message: string = 'Not found'): CustomError {
+    static notFound(message: string = statusCodeErrorMessage.NOT_FOUND): CustomError {
         return new CustomError(404, message)
     }
 
-    static internalServerError(message: string = 'Internal server error'): CustomError {
+    static internalServerError(message: string = statusCodeErrorMessage.INTERNAL_SERVER_ERROR): CustomError {
         return new CustomError(500, message)
     }
 }
