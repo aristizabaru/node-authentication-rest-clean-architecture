@@ -19,13 +19,7 @@ export class GetUsers implements GetUsersUseCase {
     async execute(): Promise<User[]> {
 
         const usersEntities = await this.userRepository.getUsers()
-        const users = usersEntities.map(user => {
-            return {
-                id: user.id,
-                name: user.name,
-                email: user.email
-            }
-        })
+        const users = usersEntities.map(user => ({ id: user.id, name: user.name, email: user.email }))
 
         return users
     }
